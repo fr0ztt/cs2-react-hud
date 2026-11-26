@@ -5,7 +5,7 @@ const Bomb = ({ player }: { player: Player }) => {
     return null;
   }
   return (
-    <div className={`armor_indicator`}>
+    <div className={`armor_indicator bomb_indicator`}>
       <BombIcon />
     </div>
   );

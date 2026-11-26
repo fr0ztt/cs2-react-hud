@@ -1,221 +1,176 @@
+@use '../../styles/mixins' as *;
+
+// Freezetime economy card (utility + money) and the LHM display box.
+$w: 440px;
+
 .boxes {
 	position: fixed;
-	bottom: 384px;
-}
-.boxes.left {
-	left: 10px;
-}
-.boxes.right {
-	right: 10px;
-}
-.boxes.hide {
-	.utilitybox {
-		height: 0;
-		opacity: 0;
-	}
-	.moneybox {
-		height: 0;
-		opacity: 0;
-	}
-	.sidebox {
-		height: 0;
-		opacity: 0;
-	}
-}
-.utilitybox.hide {
-	height: 0;
-	opacity: 0;
-}
-.moneybox.hide {
-	height: 0;
-	opacity: 0;
-}
-.sidebox.hide {
-	height: 0;
-	opacity: 0;
-}
-.sidebox {
-	width: 415px;
-	height: 70px;
+	bottom: 148px;
+	width: $w;
 	display: flex;
-	flex-direction: row;
-	opacity: 1;
-	transition: all 0.75s;
-	background-color: var(--sub-panel-color);
-	margin-bottom: 4px;
-	margin-top: 4px;
-	align-items: center;
-	.title_container {
-		color: var(--white-full);
-		height: 60px;
-		width: 100%;
-		font-size: 20px;
-		display: flex;
-		flex-direction: column;
-		>div {
-			flex: 1;
-			display: flex;
-			align-items: center;
-			font-weight: 600;
-			font-size: 18px;
-		}
-	}
-	.image_container {
-		width: 70px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		img {
-			max-width: 70px;
-			max-height: 70px;
-		}
-	}
-}
-.utilitybox {
-	width: 415px;
-	height: 70px;
-	display: flex;
-	flex-direction: row;
-	opacity: 1;
-	transition: all 0.75s;
-	background-color: var(--sub-panel-color);
-	margin-bottom: 4px;
-	margin-top: 4px;
 	flex-direction: column;
-	margin-bottom: 4px;
-	border-radius: 20px 20px 0 0;
+	justify-content: flex-end;
+	&.left { left: var(--margin); }
+	&.right { right: var(--margin); }
+
+	.utilitybox { order: 1; }
+	.moneybox { order: 2; }
+	.sidebox { order: 3; }
+
+	&.hide {
+		.utilitybox, .moneybox, .sidebox { height: 0; opacity: 0; }
+	}
+}
+
+.utilitybox, .moneybox, .sidebox {
+	width: $w;
+	overflow: hidden;
+	opacity: 1;
+	transition: height 0.6s var(--ease-out), opacity 0.6s, margin 0.6s;
+	box-sizing: border-box;
+	&.hide {
+		height: 0;
+		opacity: 0;
+		margin: 0;
+	}
+}
+
+// ---- Utility (top of the economy card) -----------------------------------
+.utilitybox {
+	height: 78px;
+	display: flex;
+	flex-direction: column;
+	@include panel(var(--surface));
+	box-shadow: inset 0 0 0 1px var(--line), inset 0 3px 0 var(--team);
+
 	.title_container {
 		display: flex;
-		flex-direction: row;
-		justify-content: center;
 		align-items: center;
-		font-weight: 600;
-		font-size: 16px;
-		height: 24px;
-	}
-	.title {
-		height: 20px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		height: 28px;
+		padding: 3px 14px 0;
+		gap: 6px;
+		border-bottom: 1px solid var(--line);
+		.title {
+			@include label(10px, var(--text-2));
+			@include header-tick(var(--team));
+		}
+		.subtitle {
+			@include label(10px, var(--text-1));
+		}
 	}
 	.grenades_container {
-		display: flex ;
-		
 		flex: 1;
-		height: 46px;
+		display: flex;
 		.grenade_container {
-			display: flex;
 			flex: 1;
-			color: white;
+			display: flex;
 			align-items: center;
-			font-weight: 600;
-			font-size: 18px;
 			justify-content: center;
-			
+			gap: 8px;
+			& + .grenade_container { border-left: 1px solid var(--line); }
+			.grenade_image { display: flex; }
 			svg {
-				height: 30px;
-				width:auto;				
+				height: 24px;
+				width: auto;
+			}
+			.grenade_amount {
+				@include display(20px, 700);
+				color: var(--text-1);
 			}
 		}
 	}
 }
+.boxes.left .utilitybox { @include chamfer('tl'); }
+.boxes.right .utilitybox { @include chamfer('tr'); }
+
+// ---- Money (bottom of the economy card) ----------------------------------
 .moneybox {
-	width: 415px;
-	height: 70px;
+	height: 62px;
 	display: flex;
 	flex-direction: row;
-	opacity: 1;
-	transition: all 0.75s;
-	background-color: var(--sub-panel-color);
-	margin-bottom: 4px;
-	margin-top: 4px;
-	font-weight: 600;
-	margin-bottom: 0px;
-	.money_container {
+	@include panel(var(--surface-strong));
+	box-shadow: inset 0 0 0 1px var(--line);
+
+	.loss_container {
+		width: 22px;
 		display: flex;
 		flex-direction: column;
-		flex: 1;
-		color: white;
-		.title {
-			height: 25px;
-			display: flex;
-			align-items: flex-end;
-			font-size: 16px;
-			justify-content: center;
-		}
-		.value {
-			flex: 1;
-			display: flex;
-			align-items: center;
-			font-size: 18px;
-			justify-content: center;
+		align-items: center;
+		justify-content: center;
+		gap: 3px;
+		background: rgba(0, 0, 0, 0.25);
+		.loss-box {
+			width: 6px;
+			height: 9px;
+			background: rgba(255, 255, 255, 0.14);
+			&.active {
+				background: var(--team);
+				box-shadow: 0 0 6px rgba(var(--team-rgb), 0.7);
+			}
 		}
 	}
-	.loss_container {
-		width: 4px;
+	.money_container {
+		flex: 1;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
+		justify-content: center;
+		gap: 5px;
+		& + .money_container { border-left: 1px solid var(--line); }
+		.title { @include label(9px, var(--text-3)); }
+		.value { @include display(22px, 700); color: var(--money); }
+	}
+	&.right { flex-direction: row-reverse; }
+}
+
+// ---- LHM display box -------------------------------------------------------
+.sidebox {
+	height: 62px;
+	margin-top: 8px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	@include panel(var(--surface));
+
+	.title_container {
+		flex: 1;
+		min-width: 0;
+		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		.loss-box {
-			height: 13px;
-			width: 100%;
-			background-color: #515254;
-			margin-top: 1px;
-			margin-bottom: 1px;
-		}
-		.loss-box.active.CT {
-			background-color: var(--color-new-ct);
-		}
-		.loss-box.active.T {
-			background-color: var(--color-new-t);
-		}
-	}
-}
-.sidebox.right {
-	flex-direction: row-reverse;
-	.title_container {
-		>div {
-			flex-direction: row-reverse;
-			text-align: right;
-			padding-right: 10px;
-		}
-	}
-}
-.sidebox.left {
-	.title_container {
-		>div {
-			flex-direction: row;
-			text-align: left;
-			padding-left: 10px;
-		}
-	}
-}
-.utilitybox.CT {
-	.title {
-		color: var(--color-new-ct);
-	}
-}
-.utilitybox.T {
-	.title {
-		color: var(--color-new-t);
-	}
-}
-.moneybox.right {
-	flex-direction: row-reverse;
-}
-.moneybox.CT {
-	.money_container {
+		gap: 5px;
+		padding: 0 16px;
 		.title {
-			color: var(--color-new-ct);
+			@include display(20px, 700);
+			color: var(--text-1);
+			@include truncate;
+		}
+		.subtitle {
+			@include display(15px, 600);
+			color: var(--text-2);
+			@include truncate;
 		}
 	}
-}
-.moneybox.T {
-	.money_container {
-		.title {
-			color: var(--color-new-t);
+	.image_container {
+		width: 62px;
+		height: 62px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.25);
+		img {
+			max-width: 44px;
+			max-height: 44px;
 		}
+	}
+	&.left {
+		@include chamfer('bl');
+		box-shadow: inset 0 0 0 1px var(--line), inset 3px 0 0 var(--text-3);
+	}
+	&.right {
+		flex-direction: row-reverse;
+		text-align: right;
+		@include chamfer('br');
+		box-shadow: inset 0 0 0 1px var(--line), inset -3px 0 0 var(--text-3);
 	}
 }

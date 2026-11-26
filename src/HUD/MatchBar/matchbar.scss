@@ -1,391 +1,378 @@
+@use '../../styles/mixins' as *;
+
+// Scoreboard geometry (1920×1080)
+$team-w: 380px;
+$score-w: 72px;
+$timer-w: 132px;
+$bar-h: 64px;
+$round-h: 22px;
+$top: 12px;
+$board-w: $team-w * 2 + $score-w * 2 + $timer-w + 8px;
+$side-w: $team-w + $score-w;          // width of one team half
+$half-timer: $timer-w * 0.5 + 4px;     // offset from screen centre to a team half
+
 @keyframes ShowWinCycle {
-	0% {
-		opacity: 0;
-		height: 0;
-	}
-	5% {
-		opacity: 1;
-		height: 50px;
-	}
-	95% {
-		opacity: 1;
-		height: 50px;
-	}
-	100% {
-		opacity: 0;
-		height: 0;
-	}
+	0% { opacity: 0; transform: translateY(-8px); }
+	6% { opacity: 1; transform: translateY(0); }
+	94% { opacity: 1; transform: translateY(0); }
+	100% { opacity: 0; transform: translateY(-8px); }
 }
+
+@keyframes BombPulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.55; }
+}
+
 #matchbar {
 	display: flex;
 	flex-direction: row;
-	position: fixed;
+	align-items: flex-start;
 	justify-content: center;
-	width: 1148px;
-	height: 70px;
-	top: 10px;
+	position: fixed;
+	width: $board-w;
+	height: $bar-h + $round-h;
+	top: $top;
 	left: 50%;
 	transform: translateX(-50%);
-	.CT {
-		color: var(--color-new-ct);
-		.round-thingy {
-			.inner {
-				background-color: #28abff;
-			}
-			background-color: #28abff80;
+
+	// ---- Team panel ------------------------------------------------------
+	.team {
+		position: relative;
+		width: $team-w;
+		height: $bar-h;
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 0 18px 0 22px;
+		box-sizing: border-box;
+		@include panel(var(--surface));
+
+		&.left {
+			flex-direction: row-reverse;
+			background:
+				linear-gradient(90deg, rgba(var(--team-rgb), 0.16) 0%, rgba(var(--team-rgb), 0) 45%),
+				var(--sheen), var(--surface);
+			@include chamfer('bl');
+			.team-name { text-align: right; }
+			.round-thingy { left: 0; }
+		}
+		&.right {
+			flex-direction: row;
+			padding: 0 22px 0 18px;
+			background:
+				linear-gradient(270deg, rgba(var(--team-rgb), 0.16) 0%, rgba(var(--team-rgb), 0) 45%),
+				var(--sheen), var(--surface);
+			@include chamfer('br');
+			.team-name { text-align: left; }
+			.round-thingy { right: 0; }
 		}
 	}
-	.T {
-		color: var(--color-new-t);
-		.round-thingy {
-			.inner {
-				background-color: #ffc600;
-			}
-			background-color: #ffc60080;
+
+	.team-name {
+		flex: 1;
+		min-width: 0;
+		@include display(28px, 700);
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: var(--text-1);
+		@include truncate;
+	}
+
+	.logo {
+		flex: 0 0 auto;
+		width: 44px;
+		height: 44px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		img {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: contain;
 		}
 	}
+
+	// Outer team edge (formerly the round marker)
+	.round-thingy {
+		position: absolute;
+		top: 0;
+		width: 4px;
+		height: 100%;
+		background: var(--team);
+		box-shadow: 0 0 14px rgba(var(--team-rgb), 0.55);
+		.inner { display: none; }
+	}
+
+	// ---- Score -----------------------------------------------------------
+	.score {
+		width: $score-w;
+		height: $bar-h;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		@include display(46px, 700);
+		color: var(--team);
+		background:
+			linear-gradient(180deg, rgba(var(--team-rgb), 0.2) 0%, rgba(var(--team-rgb), 0.06) 100%),
+			var(--surface-strong);
+		box-shadow: inset 0 -3px 0 var(--team), inset 0 0 0 1px var(--line);
+		&.left { margin-right: 4px; }
+		&.right { margin-left: 4px; }
+	}
+
+	// ---- Clock -----------------------------------------------------------
 	#timer {
+		position: relative;
 		display: flex;
 		flex-direction: column;
-		position: relative;
-		width: 126px;
-		height: 115px;
-		margin-left: 8px;
-		margin-right: 8px;
-		background-color: var(--sub-panel-color);
-        top: -10px;
-        &.no-bo {
-            height: 87px;
-        }
+		width: $timer-w;
+		height: $bar-h + $round-h;
+		overflow: hidden;
+		@include panel(var(--surface-strong));
+		@include chamfer('bottom', var(--cut));
+		&.no-bo { height: $bar-h + $round-h; }
 	}
+
+	#round_timer_text {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: $bar-h;
+		@include display(42px, 700);
+		letter-spacing: 0.02em;
+		color: var(--text-1);
+		z-index: 1;
+		&.hide { display: none; }
+	}
+
+	#round_now {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: $round-h;
+		background: rgba(255, 255, 255, 0.06);
+		border-top: 1px solid var(--line);
+		@include label(10px, var(--text-2));
+		z-index: 1;
+		&.hide { display: none; }
+	}
+
+	// Bomb planted: the whole clock becomes a draining red gauge.
 	#bomb_container {
+		position: absolute;
+		inset: 0;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
-		align-items: center;
-		position: absolute;
-		width: 100%;
-		height: 70px;
 		z-index: 0;
 		.bomb_timer {
 			width: 100%;
-			top: 0;
-			height: 0;
-            background-color: var(--color-bomb);
-            &.hide {
-                display: none;
-            }
+			background: linear-gradient(180deg, rgba(var(--danger-rgb), 0.95) 0%, rgba(var(--danger-rgb), 0.6) 100%);
+			box-shadow: 0 -2px 12px rgba(var(--danger-rgb), 0.6);
+			&.hide { display: none; }
 		}
 		.bomb_icon {
 			position: absolute;
-			width: 100%;
-			height: 100%;
-			svg {
-				position: absolute;
-				left: 50%;
-				transform: translateX(-50%);
-				top: 6px;
-				max-height: 80%;
-				max-width: 80%;
-            }
-            &.hide {
-                display: none;
-            }
-		}
-	}
-	#round_timer_text {
-		display: flex;
-		width: 100%;
-		height: 55px;
-		justify-content: center;
-		font-size: 34px;
-		font-weight: bold;
-		z-index: 1;
-		color: var(--white-full);
-        align-items: flex-end;
-        &.hide {
-            display: none;
-        }
-	}
-	#round_now {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		height: 27px;
-		align-items: center;
-		justify-content: center;
-		font-size: 14px;
-		font-weight: bold;
-		z-index: 1;
-        color: var(--white-full);
-        &.hide {
-            display: none;
-        }
-	}
-	.team {
-		width: 426px;
-		display: flex;
-		align-items: center;
-		.logo {
+			inset: 0;
 			display: flex;
-			flex-direction: row;
-			width: 105px;
-			height: 70px;
 			align-items: center;
-			overflow: hidden;
-			background-color: var(--sub-panel-color);
-			img {
-				max-width: 90%;
-				max-height: 65%;
+			justify-content: center;
+			svg {
+				height: 46px;
+				width: auto;
+				max-width: 70%;
+				animation: BombPulse 1s ease-in-out infinite;
+				filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
 			}
-        }
-        &.left {
-            justify-content: center;
-            flex-direction: row-reverse;
-            .round-thingy {
-                left: -30px;
-            }
-            .logo {
-                justify-content: flex-end;
-            }
-        }
-        &.right {
-            justify-content: center;
-            flex-direction: row;
-            .round-thingy {
-                right: -30px;
-            }
-            .logo {
-                justify-content: flex-start;
-            }
-        }
-	}
-	.team-name {
-		display: flex;
-		width: 360px;
-		height: 70px;
-		align-items: center;
-		justify-content: center;
-		font-weight: 600;
-		font-size: 30px;
-		background-color: var(--sub-panel-color);
-	}
-	.round-thingy {
-		width: 60px;
-		height: 60px;
-		position: absolute;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 50%;
-		.inner {
-			width: 35px;
-			height: 35px;
-			border-radius: 50%;
+			&.hide { display: none; }
 		}
 	}
-	.score {
-		display: flex;
-		flex-direction: row;
-		width: 77px;
-		height: 70px;
-		align-items: center;
-		justify-content: center;
-		font-weight: 600;
-		font-size: 36px;
-		background-color: var(--sub-panel-color);
-	}
-	.bar {
-		display: flex;
-		flex-direction: row;
-		width: 10px;
-        height: 70px;
-        &.CT {
-            background-color: var(--color-new-ct);
-        }
-        &.T {
-            background-color: var(--color-new-t);
-        }
-	}
-
 }
+
+// ---- Round winner banner -------------------------------------------------
 .win_text {
 	position: fixed;
 	display: none;
-	opacity: 1;
-	width: 503px;
-	height: 50px;
-	top: 70px;
+	top: $top + $bar-h + 12px;
+	width: $side-w;
+	height: 40px;
 	align-items: center;
-	color: black;
 	justify-content: center;
-	background-color: white;
-	font-size: 20px;
-	font-family: Montserrat;
-    font-weight: 600;
-    &.show {
-        display: flex;
-        animation: ShowWinCycle 5s linear 1;
-        animation-fill-mode: forwards;
-    }
-    &.right {
-        left: calc(50% + 71px);
-    }
-    &.left {
-        right: calc(50% + 71px);
-    }
+	@include display(20px, 700);
+	letter-spacing: 0.18em;
+	color: rgb(8, 11, 16);
+	background: linear-gradient(90deg, rgba(var(--team-rgb), 1) 0%, rgba(var(--team-rgb), 0.82) 100%);
+	box-shadow: 0 6px 24px rgba(var(--team-rgb), 0.35);
+	@include chamfer('bottom', 8px);
+	&.right { left: calc(50% + #{$half-timer}); }
+	&.left {
+		right: calc(50% + #{$half-timer});
+		background: linear-gradient(270deg, rgba(var(--team-rgb), 1) 0%, rgba(var(--team-rgb), 0.82) 100%);
+	}
+	&.show {
+		display: flex;
+		animation: ShowWinCycle 5s linear 1;
+		animation-fill-mode: forwards;
+	}
 }
 
+// ---- Plant / defuse progress --------------------------------------------
 .defuse_plant_container {
 	position: fixed;
 	display: flex;
-	opacity: 1;
-	width: 503px;
-	height: 49px;
-	top: 70px;
+	top: $top + $bar-h + 12px;
+	width: $side-w;
+	height: 40px;
 	align-items: center;
-	color: white;
-    justify-content: center;
-    background-color: rgba(0,0,0,0.65);
+	justify-content: center;
+	overflow: hidden;
+	opacity: 1;
+	transition: opacity 0.3s;
+	@include panel(var(--surface-strong));
+	@include chamfer('bottom', 8px);
+
 	.defuse_plant_bar {
-		height: 49px;
-		background-color: #3c3c3c;
 		position: absolute;
+		top: 0;
+		height: 100%;
 		width: 0%;
+		background: rgba(255, 255, 255, 0.1);
+		&::after {
+			content: '';
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 2px;
+			background: var(--text-1);
+		}
 	}
 	.defuse_plant_caption {
 		z-index: 1;
 		display: flex;
+		align-items: center;
+		@include display(18px, 600);
 		text-transform: uppercase;
-		align-items: flex-end;
-		svg {
-			margin-right: 13px;
-		}
-    }
-    &.right {
-        left: calc(50% + 71px);
-        .defuse_plant_bar {
-            left: 0;
-        }
-    }
-    &.left {
-        right: calc(50% + 71px);
-        .defuse_plant_bar {
-            right: 0;
-        }
-    }
-    &.hide {
-        opacity: 0;
-    }
+		letter-spacing: 0.06em;
+		.CT, .T { color: var(--team); }
+		svg { margin-right: 10px; }
+	}
+	&.right {
+		left: calc(50% + #{$half-timer});
+		.defuse_plant_bar { left: 0; }
+	}
+	&.left {
+		right: calc(50% + #{$half-timer});
+		.defuse_plant_bar { right: 0; }
+	}
+	&.hide { opacity: 0; }
 }
+
+// ---- Series pips + best-of ------------------------------------------------
 #encapsulator {
-	overflow: hidden;
+	position: fixed;
 	display: flex;
 	flex-direction: row;
-	position: fixed;
 	justify-content: center;
-	top: 80px;
-	width: 1148px;
-	height: 50px;
+	top: $top + $bar-h;
 	left: 50%;
 	transform: translateX(-50%);
-	.CT {
-		color: var(--color-new-ct);
-	}
-	.T {
-		color: var(--color-new-t);
-	}
-	.wins_bar {
-		display: flex;
-		flex-direction: row;
-		width: 10px;
-		height: 30px;
-	}
-	.wins_bar.CT {
-		background-color: var(--color-new-ct);
-	}
-	.wins_bar.T {
-		background-color: var(--color-new-t);
-	}
+	width: $board-w;
+	height: 44px;
+	overflow: hidden;
+	pointer-events: none;
 }
-.alert_bar.CT {
-	background-color: var(--color-new-ct);
-}
-.alert_bar.T {
-	background-color: var(--color-new-t);
+#encapsulator .container {
+	display: flex;
+	flex-direction: row;
+	width: $side-w;
+	height: 100%;
+	&.left { justify-content: flex-end; }
+	&.right { justify-content: flex-start; }
 }
 #series_container {
 	display: flex;
-	flex-direction: row;
-	width: 126px;
-	height: 30px;
+	width: $timer-w + 8px;
+	height: 100%;
+	justify-content: center;
 }
 #series_text {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	height: 100%;
-	align-items: center;
-	justify-content: center;
-	font-size: 12px;
-	font-weight: bold;
-	color: var(--white-full);
-}
-.container {
-	display: flex;
-	flex-direction: row;
-	width: 511px;
-	height: 100%;
-}
-.container.left {
-	justify-content: flex-end;
-}
-.container.right {
-	justify-content: flex-start;
+	margin-top: $round-h + 6px;
+	@include label(9px, var(--text-3));
+	letter-spacing: 0.22em;
 }
 .series_wins {
 	display: flex;
-	flex-direction: row;
-	width: 400px;
-	height: 30px;
+	width: $score-w;
+	height: 4px;
+	margin-top: 5px;
 	z-index: 1;
-	padding-left: 6px;
-	padding-right: 6px;
-	top: -30px;
-	transition: top 0.5s;
-}
-.series_wins.show {
-	top: 0px;
 }
 .wins_box_container {
 	display: flex;
 	flex-direction: row;
 	width: 100%;
 	height: 100%;
-	align-items: flex-start;
-	justify-content: flex-start;
+	justify-content: center;
+	gap: 4px;
 }
-.series_wins.left {
-	.wins_box_container {
-		flex-direction: row-reverse;
+.series_wins.left .wins_box_container { flex-direction: row-reverse; }
+.wins_box {
+	flex: 0 1 22px;
+	height: 4px;
+	background: rgba(255, 255, 255, 0.16);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+	&.win {
+		background: var(--team);
+		box-shadow: 0 0 8px rgba(var(--team-rgb), 0.7);
 	}
 }
-.wins_box {
-	width: 77px;
-	height: 7px;
-	margin-left: 2px;
-	margin-right: 2px;
-	box-sizing: border-box;
+
+// ---- Players alive (sits under the clock) --------------------------------
+.players_alive {
+	position: fixed;
+	top: $top + $bar-h + $round-h + 26px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: $timer-w;
+	display: flex;
+	flex-direction: column;
+	opacity: 1;
+	transition: opacity 1s;
+	@include panel(var(--surface));
+	@include chamfer('bottom', var(--cut-sm));
+
+	.title_container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 16px;
+		@include label(8px, var(--text-3));
+		letter-spacing: 0.2em;
+		border-bottom: 1px solid var(--line);
+	}
+	.counter_container {
+		display: flex;
+		height: 30px;
+		> div {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.team_counter {
+			@include display(24px, 700);
+			color: var(--team, var(--text-1));
+		}
+		.vs_counter {
+			flex: 0 0 auto;
+			@include label(9px, var(--text-3));
+		}
+	}
+	&.hide { opacity: 0; }
 }
-.wins_box.CT {
-	background-color: rgba(0,0,0,0.6);
-}
-.wins_box.CT.win {
-	background-color: var(--color-new-ct);
-}
-.wins_box.T {
-	background-color: rgba(0,0,0,0.6);
-}
-.wins_box.T.win {
-	background-color: var(--color-new-t);
-}
+
+// Legacy helpers kept for compatibility
+.alert_bar.CT, .alert_bar.T { background-color: var(--team); }

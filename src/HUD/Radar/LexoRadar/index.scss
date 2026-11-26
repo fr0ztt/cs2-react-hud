@@ -125,11 +125,9 @@ html, body, .map-container {
     z-index: 2;
 }
 
-.map .player.flashed.CT:not(.dead) .label {
-    background: rgb(159 197 255);
-}
+.map .player.flashed.CT:not(.dead) .label,
 .map .player.flashed.T:not(.dead) .label {
-    background: rgb(255 219 165);
+    background: #ffffff;
 }
 .map .player.active .background {
     width:120%;
@@ -239,13 +237,14 @@ html, body, .map-container {
 }
 
 .map .player .label {
-    color: white;
-    font-weight: 600;
+    color: rgb(8, 11, 16);
+    font-family: var(--font-display);
+    font-weight: 700;
     border-radius: 50%;
     transition: background-color 0.5s;
     -webkit-font-smoothing: crisp-edges;
-    font-size: 37px;
-    text-shadow: 4px 4px 0 black;
+    font-size: 44px;
+    box-shadow: 0 0 0 4px rgba(8, 11, 16, 0.85);
 }
 .map .bomb {
     transition:transform 0.1s ease;
@@ -267,13 +266,14 @@ html, body, .map-container {
     animation: BombDefused 2s 1 forwards;
 }
 .map .player.CT .label {
-    background: rgb(16, 88, 197)
+    background: var(--xray-ct);
 }
 .map .player.T .label {
-    background: rgb(255, 153, 0);
+    background: var(--xray-t);
 }
 .map .player.T.hasBomb .label {
-    background: red;
+    background: var(--danger);
+    color: #ffffff;
 }
 
 .map .player.dead .background {
@@ -281,6 +281,7 @@ html, body, .map-container {
 }
 .map .player.dead .label {
     background: transparent;
+    box-shadow: none;
 }
 .map .player.dead.CT .label, .map .player.CT .label div {
     color: var(--color-new-ct);

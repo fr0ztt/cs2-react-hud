@@ -1,11 +1,19 @@
+@use '../../styles/mixins' as *;
+
 #radar_maps_container {
 	position: fixed;
-	top: 10px;
-	left: 10px;
+	top: 12px;
+	left: var(--margin);
 	border: none;
 	transition: all 1s;
 	.map-container {
 		transition: all 1s;
+	}
+	// Dark plate behind the radar so the map reads over any scene.
+	&:not(.preview) {
+		background: radial-gradient(ellipse at center, rgba(8, 11, 16, 0.55) 0%, rgba(8, 11, 16, 0.25) 75%);
+		box-shadow: inset 0 0 0 1px var(--line);
+		@include chamfer('br');
 	}
 }
 #iframe_radar {
@@ -15,43 +23,42 @@
 	opacity: 0;
 }
 #radar_maps_container.preview {
-    transform: rotate3d(1, 0, 0, 14deg) translateX(-50%);
-    transform-style: preserve-3d;
-    left: 50%;
-    top: 100px;
+	transform: rotate3d(1, 0, 0, 14deg) translateX(-50%);
+	transform-style: preserve-3d;
+	left: 50%;
+	top: 100px;
 	.map {
 		perspective: 500px;
 	}
 }
+
+// ---- Series map strip above the radar -------------------------------------
 #maps_container {
 	width: 100%;
 	height: 30px;
 	display: flex;
 	flex-direction: row;
-	justify-content: space-evenly;
-	color: white;
-	background-color: var(--sub-panel-color);
+	align-items: stretch;
+	@include panel(var(--surface));
+	border-bottom: 1px solid var(--line);
 
 	.bestof {
-		width: 121px;
-		font-size: 16px;
-		font-weight: 700;
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		text-transform: uppercase;
+		padding: 0 14px;
+		@include label(9px, var(--text-1));
+		@include header-tick(var(--text-1));
+		border-right: 1px solid var(--line);
 	}
 }
 .veto_entry {
+	flex: 1;
 	display: flex;
 	justify-content: center;
-	>div {
+	> div {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		color: white;
-		text-transform: uppercase;
-		font-size: 10pt;
 	}
 	.team_logo {
 		img {
@@ -65,14 +72,13 @@
 		}
 	}
 	.map_name {
-		font-size:12px;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		opacity: 0.5;
+		width: 100%;
+		@include label(10px, var(--text-3));
+		letter-spacing: 0.16em;
 
 		&.active {
-			opacity: 1;
+			color: var(--text-1);
+			box-shadow: inset 0 -2px 0 var(--text-1);
 		}
 	}
 }

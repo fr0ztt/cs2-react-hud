@@ -1,112 +1,94 @@
+@use '../../styles/mixins' as *;
+
 @keyframes KillLifeCycle {
-	0% {
-		opacity: 0;
-		height: 0;
-	}
-	5% {
-		opacity: 1;
-		height: 43px;
-	}
-	95% {
-		opacity: 1;
-		height: 43px;
-	}
-	100% {
-		opacity: 0;
-		height: 0;
-	}
+	0% { opacity: 0; height: 0; transform: translateX(16px); }
+	5% { opacity: 1; height: 40px; transform: translateX(0); }
+	95% { opacity: 1; height: 40px; transform: translateX(0); }
+	100% { opacity: 0; height: 0; transform: translateX(0); }
 }
 
 .killfeed {
-    position: fixed;
-    right: 20px;
-    top: 93px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    .single_kill_container {
-        animation: KillLifeCycle 5s linear 1;
-        animation-fill-mode: forwards;/**/
-        overflow: hidden;
-    }
-    .single_kill {
-        display: flex;
-        flex-direction: row;
-        background-color: rgba(0,0,0,0.64);
-        margin-bottom:5px;
-        color:white;
-        height: 38px;
-        font-size: 14px;
-        overflow: hidden;
-        align-items: center;
-        font-family: Montserrat;
-        font-weight:500;
-        padding-left:15px;
-        padding-right:15px;
+	position: fixed;
+	right: var(--margin);
+	top: 12px;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
 
-        > svg {
-            max-height: 24px;
-            max-width: 28px;
-        }
+	.single_kill_container {
+		animation: KillLifeCycle 5s linear 1;
+		animation-fill-mode: forwards;
+		overflow: hidden;
+	}
 
-        div {
-            margin:10px;
-            display:flex;
-            align-items:center;
-        }
+	.single_kill {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		height: 34px;
+		margin-bottom: 6px;
+		padding: 0 14px;
+		gap: 8px;
+		overflow: hidden;
+		color: var(--text-1);
+		@include display(17px, 700);
+		@include panel(var(--surface));
+		@include chamfer('tl', 8px);
 
-        svg.weapon {
-            height: 28px;
-            filter: invert(0%);
-        }
+		div {
+			display: flex;
+			align-items: center;
+		}
 
-        .CT {
-            color: var(--color-new-ct);
-        }
+		> svg {
+			max-height: 20px;
+			max-width: 22px;
+			fill: var(--text-2);
+		}
 
-        .T {
-            color: var(--color-new-t);
-        }
+		.CT, .T { color: var(--team); }
 
-        .way .headshot, .way .wallbang, .flash_assist, .flash_kill, .smoke_kill, .noscope_kill {
-            max-height:20px;
-            margin-left:5px;
-        }
+		.plus {
+			@include display(15px, 700);
+			color: var(--text-3);
+			margin: 0 -2px;
+		}
 
-        .flash_assist {
-            margin-left: 0;
-            margin-right:5px;
-        }
+		.flash_assist {
+			max-height: 18px;
+			margin-right: -4px;
+		}
 
-        .plus {
-            margin-left: 0;
-            font-weight: 600;
-            margin-right: 8px;
-        }
+		.way {
+			gap: 5px;
+			padding: 0 4px;
+			svg.weapon {
+				height: 24px;
+				width: auto;
+			}
+			svg:not(.weapon) {
+				max-height: 20px;
+				max-width: 22px;
+			}
+		}
 
-        .assister_name {
-            margin-left:0px;
-        }
+		&.hide {
+			transition: height 1s, padding 1s, opacity 1s, margin 1s;
+			opacity: 0;
+			height: 0;
+			margin: 0;
+		}
+		&.show { opacity: 1; }
+	}
 
-        .way {
-            text-align: center;
-
-            .wallbang {
-                max-height: 24px;
-            }
-            svg:not(.weapon) {
-                max-height: 24px;
-                max-width: 28px;
-            }
-        }
-        &.hide {
-            transition:height 1s, padding 1s,  opacity 1s, margin 1s;
-            opacity:0;
-            height:0;
-            margin:0;
-        }
-        &.show {
-            opacity:1;
-        }
-    }
+	// Bomb events (plant / defuse) have no container wrapper.
+	> .single_kill {
+		.victim_name {
+			@include label(10px, var(--text-2));
+		}
+		.way svg {
+			height: 18px;
+			fill: var(--danger);
+		}
+	}
 }

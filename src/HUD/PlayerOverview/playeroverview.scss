@@ -1,74 +1,68 @@
+@use '../../styles/mixins' as *;
+
 .player-overview {
 	position: fixed;
-	top: 130px;
-	background-color: #000000a8;
+	top: 196px;
 	left: 50%;
 	transform: translateX(-50%);
-	width: 300px;
-	padding: 30px;
-	color: white;
+	width: 340px;
+	box-sizing: border-box;
+	padding: 26px 26px 22px;
+	color: var(--text-1);
 	opacity: 0;
 	transition: opacity 0.75s;
+	@include panel(var(--surface));
+	box-shadow: inset 0 0 0 1px var(--line), inset 0 3px 0 var(--team, var(--text-1));
+	@include chamfer('tr');
+	&.show { opacity: 1; }
 }
-.player-overview.show {
-	opacity: 1;
-}
-.player-overview-stat {
-	display: flex;
-	flex-direction: column;
-	margin: 8px 0;
-	.panel {
-		height: 10px;
-		margin: 3px 0;
-		.filling {
-			height: 100%;
-		}
-	}
-}
-.player-overview.CT {
-	.player-overview-stat {
-		.panel {
-			.filling {
-				background-color: var(--color-new-ct);
-			}
-			background-color: #082435;
-		}
-	}
-}
-.player-overview.T {
-	.player-overview-stat {
-		.panel {
-			.filling {
-				background-color: var(--color-new-t);
-			}
-			background-color: #331b00;
-		}
-	}
-}
+
 .player-overview-picture {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: relative;
+	margin-bottom: 16px;
 	img {
-		border-radius: 50%;
-		margin-bottom: 20px;
-		max-width: 170px;
-		max-height: 170px;
+		width: 150px;
+		height: 150px;
+		object-fit: cover;
+		background: rgba(var(--team-rgb, 255, 255, 255), 0.14);
+		@include chamfer('tl', 14px);
 	}
 }
+
 .player-overview-username {
-	text-align: center;
-	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin-bottom: 14px;
+	@include display(30px, 700);
+	letter-spacing: 0.04em;
 }
+
 img.flag {
+	height: 18px;
+	margin: 0 10px 0 0;
 	border-radius: 0;
-	margin: 0;
-	left: 0;
-	bottom: 0;
-	height: 22px;
-	margin-right: 8px;
+	box-shadow: 0 0 0 1px var(--line-strong);
+}
+
+.player-overview-stat {
+	display: flex;
+	flex-direction: column;
+	margin: 10px 0;
+	.label {
+		@include label(10px, var(--text-2));
+	}
+	.panel {
+		height: 6px;
+		margin-top: 6px;
+		background: rgba(255, 255, 255, 0.1);
+		.filling {
+			height: 100%;
+			background: var(--team, var(--text-1));
+			box-shadow: 0 0 8px rgba(var(--team-rgb, 255, 255, 255), 0.6);
+		}
+	}
 }

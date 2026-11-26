@@ -1,0 +1,63 @@
+// SIGNAL — shared visual building blocks. Values come from tokens.css.
+
+// Base panel: dark glass, subtle top sheen, 1px inner hairline.
+@mixin panel($bg: var(--surface)) {
+	background: var(--sheen), $bg;
+	box-shadow: inset 0 0 0 1px var(--line);
+}
+
+// Signature 45° chamfer on one corner.
+@mixin chamfer($corner: 'tl', $size: var(--cut)) {
+	@if $corner == 'tl' {
+		clip-path: polygon($size 0, 100% 0, 100% 100%, 0 100%, 0 $size);
+	} @else if $corner == 'tr' {
+		clip-path: polygon(0 0, calc(100% - #{$size}) 0, 100% $size, 100% 100%, 0 100%);
+	} @else if $corner == 'bl' {
+		clip-path: polygon(0 0, 100% 0, 100% 100%, $size 100%, 0 calc(100% - #{$size}));
+	} @else if $corner == 'br' {
+		clip-path: polygon(0 0, 100% 0, 100% calc(100% - #{$size}), calc(100% - #{$size}) 100%, 0 100%);
+	} @else if $corner == 'bottom' {
+		clip-path: polygon(0 0, 100% 0, 100% calc(100% - #{$size}), calc(100% - #{$size}) 100%, $size 100%, 0 calc(100% - #{$size}));
+	} @else if $corner == 'top' {
+		clip-path: polygon($size 0, calc(100% - #{$size}) 0, 100% $size, 100% 100%, 0 100%, 0 $size);
+	}
+}
+
+// Small uppercase label used for every caption / header.
+@mixin label($size: 10px, $color: var(--text-3)) {
+	font-family: var(--font-label);
+	font-size: $size;
+	font-weight: 600;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: $color;
+	line-height: 1;
+}
+
+// Display numerals / names.
+@mixin display($size: 18px, $weight: 700) {
+	font-family: var(--font-display);
+	font-size: $size;
+	font-weight: $weight;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+// Card header: label with a short team-coloured tick before it.
+@mixin header-tick($color: var(--team, var(--text-1))) {
+	&::before {
+		content: '';
+		display: inline-block;
+		width: 10px;
+		height: 2px;
+		margin-right: 8px;
+		vertical-align: middle;
+		background: $color;
+	}
+}
+
+@mixin truncate {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

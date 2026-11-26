@@ -1,0 +1,120 @@
+/* ==========================================================================
+   SIGNAL — design tokens for the observer HUD.
+   Every colour, surface, font and size used by the HUD lives here.
+   ========================================================================== */
+
+/* ---- Typography ---------------------------------------------------------- */
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('../fonts/rajdhani/rajdhani-latin-500-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url('../fonts/rajdhani/rajdhani-latin-ext-500-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url('../fonts/rajdhani/rajdhani-latin-600-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: block;
+  src: url('../fonts/rajdhani/rajdhani-latin-ext-600-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('../fonts/rajdhani/rajdhani-latin-700-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('../fonts/rajdhani/rajdhani-latin-ext-700-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  /* ---- X-Ray team colours (single source of truth) -------------------------
+     These are the X-Ray colours defined by the app. Change them here only:
+     every team accent in the HUD derives from these two RGB triplets. */
+  --xray-ct-rgb: 90, 184, 244;   /* #5ab8f4 */
+  --xray-t-rgb: 240, 201, 65;    /* #f0c941 */
+
+  --xray-ct: rgb(var(--xray-ct-rgb));
+  --xray-t: rgb(var(--xray-t-rgb));
+
+  /* Legacy names kept as aliases so nothing that references them breaks. */
+  --color-new-ct: var(--xray-ct);
+  --color-new-t: var(--xray-t);
+  --color-ct: var(--xray-ct);
+  --color-t: var(--xray-t);
+
+  /* ---- Neutral base -------------------------------------------------------- */
+  --surface: rgba(10, 13, 19, 0.88);
+  --surface-strong: rgba(8, 10, 15, 0.94);
+  --surface-raised: rgba(22, 27, 36, 0.92);
+  --surface-sunken: rgba(0, 0, 0, 0.35);
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 55%);
+
+  --text-1: #ffffff;
+  --text-2: rgba(255, 255, 255, 0.72);
+  --text-3: rgba(255, 255, 255, 0.46);
+  --text-4: rgba(255, 255, 255, 0.24);
+
+  /* ---- Semantic ------------------------------------------------------------ */
+  --danger-rgb: 255, 70, 70;
+  --danger: rgb(var(--danger-rgb));
+  --money: #9ed26a;
+  --money-dim: rgba(158, 210, 106, 0.45);
+  --warn: #f0a04b;
+
+  /* Legacy names (kept as aliases) */
+  --main-panel-color: var(--surface);
+  --sub-panel-color: var(--surface);
+  --white-full: var(--text-1);
+  --white-half: var(--text-2);
+  --color-gray: var(--text-2);
+  --color-moneys: var(--money);
+  --color-bomb: var(--danger);
+  --color-defuse: var(--xray-ct);
+
+  /* ---- Type ---------------------------------------------------------------- */
+  --font-display: 'Rajdhani', 'Montserrat', sans-serif;
+  --font-label: 'Montserrat', 'Rajdhani', sans-serif;
+
+  /* ---- Geometry ------------------------------------------------------------ */
+  --cut: 10px;          /* signature chamfer */
+  --cut-sm: 6px;
+  --gap: 4px;
+  --edge: 3px;          /* team accent edge thickness */
+  --margin: 20px;       /* screen safe margin */
+
+  /* ---- Motion -------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Team context: any element tagged CT / T exposes --team for its subtree. */
+.CT { --team: var(--xray-ct); --team-rgb: var(--xray-ct-rgb); }
+.T  { --team: var(--xray-t);  --team-rgb: var(--xray-t-rgb); }

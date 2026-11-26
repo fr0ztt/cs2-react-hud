@@ -1,27 +1,30 @@
+@use '../../styles/mixins' as *;
+
+// Centred above the observed-player panel so it never covers the team strips.
 .trivia_container {
-    position: absolute;
-    left:20px;
-    background-color:black;
-    color: white;
-    width: 450px;
-    top:830px;
-    opacity:1;
-    transition: opacity 1s;
-    
-    font-size: 16pt;
-}
-.trivia_container .title {
-    height: 30px;
-    display: flex;
-    align-items: center;
-    padding-left:30px;
-    font-weight:bold;
-    padding-top:10px;
-}
-.trivia_container .content {
-    padding-left:30px;
-    padding-bottom:15px;
-}
-.trivia_container.hide {
-    opacity:0;
+	position: fixed;
+	left: 50%;
+	bottom: 268px;
+	transform: translateX(-50%);
+	width: 620px;
+	box-sizing: border-box;
+	padding: 16px 24px 18px;
+	color: var(--text-1);
+	opacity: 1;
+	transition: opacity 0.8s;
+	@include panel(var(--surface));
+	box-shadow: inset 0 0 0 1px var(--line), inset 3px 0 0 var(--text-1);
+	@include chamfer('tr');
+
+	.title {
+		margin-bottom: 8px;
+		@include label(11px, var(--text-2));
+		@include header-tick(var(--text-1));
+	}
+	.content {
+		@include display(22px, 600);
+		line-height: 1.25;
+		color: var(--text-1);
+	}
+	&.hide { opacity: 0; }
 }

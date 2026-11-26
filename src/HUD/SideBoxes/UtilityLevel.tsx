@@ -29,21 +29,21 @@ function utilityState(amount: number) {
 
 function utilityColor(amount: number) {
   if (amount === 20) {
-    return "#22f222";
+    return "var(--money)";
   }
   if (amount > 14) {
-    return "#32f218";
+    return "var(--money)";
   }
   if (amount > 9) {
-    return "#8ef218";
+    return "#d6d36a";
   }
   if (amount > 5) {
-    return "#f29318";
+    return "var(--warn)";
   }
   if (amount > 0) {
-    return "#f25618";
+    return "#f07a4b";
   }
-  return "#f21822";
+  return "var(--danger)";
 }
 
 function sum(grenades: WeaponRaw[], name: string) {
